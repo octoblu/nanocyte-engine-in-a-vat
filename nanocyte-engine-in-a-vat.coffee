@@ -1,5 +1,7 @@
 fs = require 'fs'
+{PassThrough} = require 'stream'
 _ = require 'lodash'
+
 redis = require 'redis'
 debug = require('debug')('nanocyte-engine-in-a-vat')
 Router = require '@octoblu/nanocyte-engine-simple'
@@ -7,7 +9,7 @@ Router = require '@octoblu/nanocyte-engine-simple'
 ConfigurationGenerator = require 'nanocyte-configuration-generator'
 ConfigurationSaver = require 'nanocyte-configuration-saver-redis'
 
-VatNodeAssembler = require './vat-node-assembler'
+getVatNodeAssembler = require './get-vat-node-assembler'
 AddNodeInfoStream = require './add-node-info-stream'
 
 class NanocyteEngineInAVat
@@ -15,9 +17,12 @@ class NanocyteEngineInAVat
     {@flowName, @flowData} = options
     @instanceId = 'engine-in-a-vat'
     @triggers = @findTriggers()
+    @output = new PassThrough objectMode: true
 
     client = redis.createClient process.env.REDIS_PORT, process.env.REDIS_HOST, auth_pass: process.env.REDIS_PASSWORD
     client.unref()
+
+    @NodeAssembler = getVatNodeAssembler @output
     @configurationGenerator = new ConfigurationGenerator {}
     @configurationSaver = new ConfigurationSaver client
 
@@ -39,6 +44,7 @@ class NanocyteEngineInAVat
 
   messageRouter: (nodeId, message) =>
     nodeInfoStream = new AddNodeInfoStream flowData: @flowData, nanocyteConfig: @configuration
+
     envelope =
       metadata:
         fromNodeId: nodeId
@@ -53,13 +59,16 @@ class NanocyteEngineInAVat
     nodeInfoStream
 
   setupRouter: (callback)=>
-    router = new Router @flowName, 'engine-in-a-vat', NodeAssembler: VatNodeAssembler
+    router = new Router @flowName, 'engine-in-a-vat', NodeAssembler: @NodeAssembler
     router.initialize =>
       debug "router initialized."
       callback null, router
 
   findTriggers: =>
     _.indexBy _.filter(@flowData.nodes, type: 'operation:trigger'), 'name'
+
+  output: (error, message) =>
+    console.log "OUTPUT GOT MESSAGE", message
 
 
 module.exports = NanocyteEngineInAVat

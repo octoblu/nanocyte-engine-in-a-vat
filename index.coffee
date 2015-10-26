@@ -10,7 +10,7 @@ engineInAVat.configure (error, configuration)->
   router2 = engineInAVat.triggerByName {name: 'Handshake', message: 1}
 
   router2.on 'data', (message) =>
-    console.log message, "\n"
+    console.log message    
 
   #
   # engineInAVat.triggerByName name: 'Handshake', message: 1
