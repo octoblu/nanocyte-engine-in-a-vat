@@ -1,16 +1,48 @@
 fs = require 'fs'
 redis = require 'redis'
-client = redis.createClient process.env.REDIS_PORT, process.env.REDIS_HOST, auth_pass: process.env.REDIS_PASSWORD
+debug = require('debug')('nanocyte-engine-in-a-vat')
+Router = require '@octoblu/nanocyte-engine-simple'
 
 ConfigurationGenerator = require 'nanocyte-configuration-generator'
 ConfigurationSaver = require 'nanocyte-configuration-saver-redis'
 
-flow = require './flows/compose-race-condition.json'
-configurationGenerator = new ConfigurationGenerator {}
-configurationSaver = new ConfigurationSaver client
 
-configurationGenerator.configure flowData: flow, userData: {}, (error, flowData) ->
-  return console.error "config generator had an error!", error if error?
-  configurationSaver.save flowId: 'compose-race-condition', instanceId: '1', flowData: flowData, (error, result)->
-    return console.error "config saver had an error!", error if error?
+class NanocyteEngineInAVat
+  constructor: (options) ->
+    {@flowName, @flowData} = options
+
+    client = redis.createClient process.env.REDIS_PORT, process.env.REDIS_HOST, auth_pass: process.env.REDIS_PASSWORD
     client.unref()
+
+    @configurationGenerator = new ConfigurationGenerator {}
+    @configurationSaver = new ConfigurationSaver client
+
+  configure: (callback=->) =>
+    @configurationGenerator.configure flowData: @flowData, userData: {}, (error, configuration) =>
+      return console.error "config generator had an error!", error if error?
+      debug 'configured'
+      @configurationSaver.save flowId: @flowName, instanceId: 'engine-in-a-vat', flowData: configuration, (error, result)=>
+        return console.error "config saver had an error!", error if error?
+        debug 'saved'
+        callback()
+
+  messageRouter: (nodeId, message, callback) =>
+    debug "trying to message router"
+    envelope =
+      metadata:
+        fromNodeId: nodeId
+        flowId: @flowId
+        instanceId: @instanceId
+      message: message
+
+    router = new Router @flowName, 'engine-in-a-vat'
+
+    router.initialize =>
+      debug "router initialized."
+      router.message envelope
+      router.on 'end', => process.exit -1
+      router.on 'data', (data) => debug "router said:", data
+
+    router
+
+module.exports = NanocyteEngineInAVat
