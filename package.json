@@ -1,0 +1,29 @@
+{
+  "name": "nanocyte-engine-in-a-vat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octoblu/nanocyte-engine-in-a-vat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/octoblu/nanocyte-engine-in-a-vat/issues"
+  },
+  "homepage": "https://github.com/octoblu/nanocyte-engine-in-a-vat#readme",
+  "dependencies": {
+    "@octoblu/nanocyte-engine-simple": "^2.0.1",
+    "coffee-script": "^1.10.0",
+    "meshblu-config": "^3.1.1",
+    "nanocyte-configuration-generator": "^1.22.0",
+    "nanocyte-configuration-saver-redis": "^1.6.1",
+    "nanocyte-deployer": "^1.14.0",
+    "redis": "^2.2.5"
+  }
+}
