@@ -39,8 +39,7 @@ class NanocyteEngineInAVat
 
     router.initialize =>
       debug "router initialized."
-      router.message envelope
-      router.on 'end', => process.exit -1
+      router.message envelope      
       router.on 'data', (data) => debug "router said:", data
 
     router
