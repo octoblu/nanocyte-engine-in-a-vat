@@ -3,7 +3,7 @@
   "token": "1946004008da4fe27f8c2821e3b803217ee93877",
   "name": "Compose-Problem",
   "description": null,
-  "hash": "169ace76",
+  "hash": "71196ab0",
   "nodes": [
     {
       "id": "cbf2bf80-7c11-11e5-81dc-655d36a9ff62",
@@ -250,6 +250,31 @@
       "outputLocations": [],
       "x": 300.5203857421875,
       "y": 76.17191314697266
+    },
+    {
+      "id": "1ec9f870-7c32-11e5-81dc-655d36a9ff62",
+      "resourceType": "flow-node",
+      "uuid": "*",
+      "topic": "message",
+      "name": "Broadcast",
+      "class": "broadcast",
+      "helpText": "Broadcast message to any meshblu device or Octoblu flow",
+      "category": "operation",
+      "type": "operation:broadcast",
+      "defaults": {
+        "uuid": "*",
+        "topic": "message"
+      },
+      "nanocyte": {
+        "name": "nanocyte-node-broadcast"
+      },
+      "input": 1,
+      "formTemplatePath": "/pages/node_forms/output_form.html",
+      "logo": "https://ds78apnml6was.cloudfront.net/operation/broadcast.svg",
+      "inputLocations": [],
+      "outputLocations": [],
+      "x": 311.15081787109375,
+      "y": -31.963725805282593
     }
   ],
   "links": [
@@ -294,10 +319,40 @@
       "fromPort": 0,
       "to": "30e3d000-7c12-11e5-81dc-655d36a9ff62",
       "toPort": 0
+    },
+    {
+      "from": "1ba59480-7c12-11e5-81dc-655d36a9ff62",
+      "fromPort": 0,
+      "to": "1ec9f870-7c32-11e5-81dc-655d36a9ff62",
+      "toPort": 0
     }
   ],
   "nanocyteBeta": true,
   "deployed": true,
   "selectedLink": null,
-  "selectedFlowNode": null
+  "selectedFlowNode": {
+    "id": "1ec9f870-7c32-11e5-81dc-655d36a9ff62",
+    "resourceType": "flow-node",
+    "uuid": "*",
+    "topic": "message",
+    "name": "Broadcast",
+    "class": "broadcast",
+    "helpText": "Broadcast message to any meshblu device or Octoblu flow",
+    "category": "operation",
+    "type": "operation:broadcast",
+    "defaults": {
+      "uuid": "*",
+      "topic": "message"
+    },
+    "nanocyte": {
+      "name": "nanocyte-node-broadcast"
+    },
+    "input": 1,
+    "formTemplatePath": "/pages/node_forms/output_form.html",
+    "logo": "https://ds78apnml6was.cloudfront.net/operation/broadcast.svg",
+    "inputLocations": [],
+    "outputLocations": [],
+    "x": 311.15081787109375,
+    "y": -31.963725805282593
+  }
 }
