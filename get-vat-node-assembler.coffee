@@ -12,9 +12,10 @@ getVatNodeAssembler = (outputStream) ->
 
       nodes
 
-  getVatNode = (EngineNode)->
+  getVatNode = (EngineNode, nanocyteType)->
     class VatNode extends EngineNode
-      message: (envelope, enc, next)=>
+      message: (envelope, enc, next) =>
+        envelope.metadata.nanocyteType = nanocyteType
         outputStream.write envelope
         super
 

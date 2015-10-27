@@ -13,8 +13,9 @@ class AddNodeInfoStream extends Transform
       fromNode: fromNode
       toNode: toNode
       timestamp: Date.now()
+      nanocyteType: envelope.metadata.nanocyteType
 
-    newEnvelope = _.extend debugInfo: debugInfo, envelope
+    newEnvelope = _.merge debugInfo: debugInfo, envelope
     @push newEnvelope
     next()
 

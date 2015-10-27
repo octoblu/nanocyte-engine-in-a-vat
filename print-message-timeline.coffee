@@ -14,7 +14,7 @@ printMessage = (message) ->
 
   messageString = JSON.stringify message.message
   "[#{colors.yellow meta.transactionId}] " +
-  "#{debug.fromNode.config.name || meta.fromNodeId} (#{debug.fromNode.config.type}) : " +
+  "#{debug.fromNode.config.name || meta.fromNodeId} #{colors.green debug.nanocyteType} #{colors.gray debug.fromNode.config.type} : " +
   "--> " +
   "#{debug.toNode.config.name || meta.toNodeId} (#{debug.toNode.config.type})" +
   " #{colors.green messageString}"
