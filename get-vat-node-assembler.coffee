@@ -7,14 +7,17 @@ EngineOutputNode = require('@octoblu/nanocyte-engine-simple/src/models/engine-ou
 getVatNodeAssembler = (outputStream) ->
   class VatNodeAssembler extends NodeAssembler
     assembleNodes: =>
-      _.mapValues super, getVatNode
+      nodes = _.mapValues super, getVatNode
+      nodes['engine-output'] = nodes['nanocyte-component-pass-through']
+
+      nodes
 
   getVatNode = (EngineNode)->
     class VatNode extends EngineNode
       message: (envelope, enc, next)=>
         outputStream.write envelope
         super
-        
+
   VatNodeAssembler
 
 module.exports = getVatNodeAssembler
