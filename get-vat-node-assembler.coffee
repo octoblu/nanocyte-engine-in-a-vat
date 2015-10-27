@@ -1,34 +1,20 @@
 {Transform} = require 'stream'
+_ = require 'lodash'
 
 NodeAssembler = require('@octoblu/nanocyte-engine-simple/src/models/node-assembler')
 EngineOutputNode = require('@octoblu/nanocyte-engine-simple/src/models/engine-output-node')
 
 getVatNodeAssembler = (outputStream) ->
   class VatNodeAssembler extends NodeAssembler
-    constructor: ->
-      super arguments
-      @_assembleNodes = @assembleNodes
-      @assembleNodes = @assembleVatNodes
+    assembleNodes: =>
+      _.mapValues super, getVatNode
 
-    assembleVatNodes: =>
-      nodes = @_assembleNodes.apply arguments
-      nodes['engine-output'] = VatOutputNode
-
-      nodes
-
-  class VatOutputNode extends EngineOutputNode
-    constructor: -> super EngineOutput: VatOutput
-
-
-  class VatOutput extends Transform
-    constructor: ->
-      super objectMode: true
-      @pipe outputStream
-
-    _transform: (envelope, enc, next) =>
-      @push envelope.message
-      next()
-
+  getVatNode = (EngineNode)->
+    class VatNode extends EngineNode
+      message: (envelope, enc, next)=>
+        outputStream.write envelope
+        super
+        
   VatNodeAssembler
 
 module.exports = getVatNodeAssembler
